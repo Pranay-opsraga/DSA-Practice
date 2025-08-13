@@ -2,8 +2,7 @@
 
 This folder contains solutions to array-based problems from LeetCode, Codeforces, and GeeksforGeeks.
 
-## 📄 Problems Solved
-1. *(Coming soon)*
+
 
 ---
 
