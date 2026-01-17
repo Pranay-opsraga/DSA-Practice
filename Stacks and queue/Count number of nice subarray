@@ -1,0 +1,39 @@
+class Solution {
+public:
+     int helper(vector<int>& nums, int k){
+          int n = nums.size();
+          int sum = 0;
+          int cnt = 0;
+          int left = 0;
+          int right = 0;
+          while(right < n){
+              sum += (nums[right]) & 1;
+              while(sum > k){
+                 sum -= (nums[left]) & 1;
+                 left++;
+              }
+              cnt += right - left + 1;
+              right++;
+          }
+         return cnt; 
+     }
+    int numberOfSubarrays(vector<int>& nums, int k) {
+          int n = nums.size();
+          int sum = 0;
+          int cnt = 0;
+          int left = 0;
+          int right = 0;
+          while(right < n){
+              sum += (nums[right]) & 1;
+              while(sum > k){
+                 sum -= (nums[left]) & 1;
+                 left++;
+              }
+              cnt += right - left + 1;
+              right++;
+          }
+
+          int equals = cnt - helper(nums , k-1);
+          return equals;
+    }
+};
