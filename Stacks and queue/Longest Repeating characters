@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        int n = s.size();
+        int max_len = 0;
+        int left = 0;
+        int right = 0;
+        unordered_map<char, int> mpp;
+        while (right < n) {
+            int len = 0;
+            mpp[s[right]]++;
+            int max_f = 0;
+            for (auto it : mpp) {
+                max_f = max(max_f, it.second);
+            }
+            len = right - left + 1;
+            int need = len - max_f;
+
+            if (need > k) {
+                mpp[s[left]]--;
+                left++;
+
+                len = right - left + 1;
+                need = len - max_f;
+            }
+            if(need <= k){
+            max_len = max(max_len, len);
+            }
+            right++;
+        }
+        return max_len;
+    }
+};
