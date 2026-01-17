@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> mpp;
+        if (s.size() == 1)
+            return 1;
+        if (s.size() == 0)
+            return 0;
+        int left = 0;
+        int right = 0;
+        int len = 0;
+        int max_len = 0;
+
+        while (right < s.size()) {
+            char ch = s[right];
+            mpp[ch]++;
+            while (mpp[ch] > 1) {
+                mpp[s[left]]--;
+                left++;
+            }
+
+            len = right - left + 1;
+            max_len = max(len, max_len);
+            right++;
+        }
+        return max_len;
+    }
+};
