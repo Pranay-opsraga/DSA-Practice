@@ -1,0 +1,130 @@
+struct Node {
+    int key;
+    int data;
+    int freq;
+    Node* prev;
+    Node* next;
+
+    Node(int k, int x) {
+        key = k;
+        data = x;
+        freq = 1;
+        prev = nullptr;
+        next = nullptr;
+    }
+};
+
+struct DLL {
+    Node* dummy_head;
+    Node* dummy_tail;
+    int size;
+
+    DLL() {
+        dummy_head = new Node(-1, -1);
+        dummy_tail = new Node(-1, -1);
+        dummy_head->next = dummy_tail;
+        dummy_tail->prev = dummy_head;
+        size = 0;
+    }
+
+    void insertAfterHead(Node* node) {
+        Node* after = dummy_head->next;
+        dummy_head->next = node;
+        node->prev = dummy_head;
+        node->next = after;
+        after->prev = node;
+        size++;
+    }
+
+    void deleteNode(Node* node) {
+        Node* p = node->prev;
+        Node* n = node->next;
+        p->next = n;
+        n->prev = p;
+        size--;
+    }
+
+    Node* deleteLast() {
+        if (size == 0)
+            return nullptr;
+        Node* lru = dummy_tail->prev;
+        deleteNode(lru);
+        return lru;
+    }
+};
+
+class LFUCache {
+public:
+    unordered_map<int, Node*> keyNode;
+    unordered_map<int, DLL*> freqList;
+
+    int cap;
+    int minifreq;
+
+    LFUCache(int capacity) {
+        cap = capacity;
+        minifreq = 0;
+    }
+
+    int get(int key) {
+        if (keyNode.find(key) == keyNode.end()) { // key not found
+            return -1;
+        }
+
+        Node* node = keyNode[key];
+        updateFreq(node); // increase frequency on access
+        return node->data;
+    }
+
+    void put(int key, int value) {
+        // key already exists
+        if (keyNode.find(key) != keyNode.end()) {
+            Node* temp = keyNode[key];
+            temp->data = value;
+            updateFreq(temp);
+        } else {
+            if (keyNode.size() == cap) {             // Capacity full!!!
+                DLL* list = freqList[minifreq];      // least frequency list
+                Node* toDelete = list->deleteLast(); // LRU in that freq
+                keyNode.erase(toDelete->key);
+                delete toDelete;
+            }
+            // insert new node
+            Node* newNode = new Node(key, value);
+            minifreq = 1; // reset minFreq because new node has freq = 1
+            if (freqList.find(1) ==
+                freqList.end()) { // if freq1 list does not exist
+                freqList[1] = new DLL();
+            }
+            freqList[1]->insertAfterHead(newNode);
+            keyNode[key] = newNode;
+        }
+    }
+
+    void updateFreq(Node* node) {
+        int freq = node->freq;
+
+        // remove node from its current frequency list
+        freqList[freq]->deleteNode(node);
+
+        // if this was the only node with minFreq, increment minFreq
+        if (freq == minifreq && freqList[freq]->size == 0) {
+            minifreq++;
+        }
+
+        node->freq++;
+
+        if (freqList.find(node->freq) == freqList.end()) {
+            freqList[node->freq] = new DLL(); // create new freq list if needed
+        }
+
+        freqList[node->freq]->insertAfterHead(node);
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
