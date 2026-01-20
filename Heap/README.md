@@ -207,10 +207,16 @@ DP tables
 
 👉 Arrays / vectors
 
-🧠 Compare structures (very useful)
-Need	                    Best structure
-Always smallest          	Min-heap
-Always largest	          Max-heap
-Sorted traversal	        Map / sort
-Dynamic best choice	      Priority Queue
-Constant lookup	          Hash map
+#### 🧠 Compare structures (very useful)
+
+Need	                   -    Best structure
+
+Always smallest         -    	Min-heap
+
+Always largest	         -     Max-heap
+
+Sorted traversal	      -      Map / sort
+
+Dynamic best choice	    -     Priority Queue
+
+Constant lookup	        -     Hash map
