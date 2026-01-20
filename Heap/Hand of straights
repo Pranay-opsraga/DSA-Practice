@@ -1,0 +1,55 @@
+class Solution {
+public:
+    bool isNStraightHand(vector<int>& hand, int groupSize) {
+        if (hand.size() % groupSize != 0)
+            return false;
+
+        unordered_map<int, int> mpp;
+        for (int it : hand) {
+            mpp[it]++;
+        }
+
+        priority_queue<int , vector<int> , greater<int>>pq;
+        for (auto &it : mpp) {
+            pq.push(it.first);
+        }
+
+        // while (!mpp.empty()) {
+
+        //     int start = mpp.begin()->first;
+
+        //     for (int i = 0; i < groupSize; i++) {
+        //         int curr = start + i;
+
+        //         if (mpp.find(curr) == mpp.end())
+        //             return false;
+
+        //         mpp[curr]--;
+
+        //         if (mpp[curr] == 0)
+        //             mpp.erase(curr);
+        //     }
+        // }
+
+        // return true;
+
+        while(!pq.empty()){
+             
+              int start = pq.top();
+
+              for(int i = 0 ; i < groupSize ; i++){
+                    int curr = start + i;
+
+                    if(mpp[curr] == 0) return false; // non consecutive
+
+                    mpp[curr]--;
+
+                    if(mpp[curr] == 0){
+                        if(pq.top() != curr) return false; // Card must be the smallest 
+                        pq.pop(); // Remove it 
+                    }
+              }
+        }
+        return true;
+    }
+};
