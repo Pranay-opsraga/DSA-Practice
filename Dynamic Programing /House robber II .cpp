@@ -32,6 +32,43 @@ public:
 
 //Space optimiation
 
+class Solution {
+public:
+    int solve(vector<int>& nums, int start, int end) {
+
+        if(start == end) return nums[start];
+
+        int prev = nums[start];
+
+        int prev1 = max(nums[start] , nums[start+1]);
+        int n = end - start + 1 ;
+
+        for (int i = start+2; i <= end; i++) {
+            int pick = prev + nums[i];
+            int notpick = prev1;
+
+            int curr = max(pick, notpick);
+            prev = prev1;
+            prev1 = curr;
+        }
+
+        return prev1;
+    }
+
+    int rob(vector<int>& nums) {
+
+        int n = nums.size();
+
+        if (n == 1)
+            return nums[0];
+
+        int case1 = solve(nums, 0, n - 2);
+        int case2 = solve(nums , 1 , n - 1 );
+
+        return max(case1, case2);
+    }
+};
+
 // Memoization
 
 class Solution {
