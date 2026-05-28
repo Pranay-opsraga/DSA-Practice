@@ -74,4 +74,40 @@ public:
     }
 };
 
+// Memoization
+
+class Solution {
+public:
+    bool solve(int ind, int target, vector<int>& arr, vector<vector<int>>& dp) {
+
+        if (target == 0)
+            return true;
+        if (ind == 0)
+            return arr[0] == target;
+
+        if (dp[ind][target] != -1)
+            return dp[ind][target];
+
+        bool nottake = solve(ind - 1, target, arr, dp);
+
+        bool take = false;
+
+        if (target >= arr[ind])
+            take = solve(ind - 1, target - arr[ind], arr, dp);
+
+        return dp[ind][target] = (nottake == true || take == true);
+    }
+    bool canPartition(vector<int>& nums) {
+        int n = nums.size();
+
+        int total = accumulate(nums.begin(), nums.end(), 0);
+
+        if (total & 1)
+            return false;
+        int sum = total / 2;
+        vector<vector<int>> dp(200, vector<int>(sum + 1, -1));
+        return solve(n - 1, sum, nums, dp);
+    }
+};
+
 
